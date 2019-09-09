@@ -1,0 +1,26 @@
+<p>product-new works!</p>
+
+<form [formGroup]="productForm" (ngSubmit)="onSubmit(productForm.value)">
+  <div>
+    <label for="name">
+      Name
+    </label>
+    <input id="name" type="text" formControlName="name">
+  </div>
+
+  <div>
+    <label for="description">
+      Description
+    </label>
+    <input id="description" type="text" formControlName="description">
+  </div>
+
+  <div>
+    <label for="price">
+      Price
+    </label>
+    <input id="price" type="number" formControlName="price">
+  </div>
+
+  <button type="submit">Submit</button>
+</form>
