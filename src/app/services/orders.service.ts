@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http'
+import { HttpClient, HttpHeaders } from '@angular/common/http'
+
+const httpOptions = {
+  headers: new HttpHeaders({
+    'Content-Type':  'application/json',
+    'Accept': 'application/json'
+  })
+}
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +21,22 @@ export class OrdersService {
 
   getOrders() {
     return this.http.get(this.ordersEndpoint)
-            .subscribe(orders => console.log(orders))
   }
+
+  getOrder(id: number) {
+    return this.http.get(this.ordersEndpoint + `${id}`)
+  }
+
+  addOrder(payload: any) {
+    return this.http.post(this.ordersEndpoint, payload, httpOptions)
+  }
+
+  updateOrder(id: number, payload: any) {
+    return this.http.put(this.ordersEndpoint + `${id}`, payload, httpOptions)
+  }
+
+  deleteOrder(id: number) {
+    return this.http.delete(this.ordersEndpoint + `${id}`)
+  }
+
 }

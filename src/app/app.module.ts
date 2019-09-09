@@ -10,7 +10,11 @@ import { ProductsListComponent } from './pages/products-list/products-list.compo
 import { ProductDetailsComponent } from './pages/product-details/product-details.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './pages/home/home.component';
-import { ProductNewComponent } from './pages/product-new/product-new.component'
+import { ProductNewComponent } from './pages/product-new/product-new.component';
+import { ListComponent } from './pages/orders/list/list.component';
+import { CreateComponent } from './pages/orders/create/create.component';
+import { DetailsComponent } from './pages/orders/details/details.component';
+import { OrderStatusPipe } from './pipes/order-status.pipe'
 
 @NgModule({
   declarations: [
@@ -19,7 +23,11 @@ import { ProductNewComponent } from './pages/product-new/product-new.component'
     ProductsListComponent,
     ProductDetailsComponent,
     HomeComponent,
-    ProductNewComponent
+    ProductNewComponent,
+    ListComponent,
+    CreateComponent,
+    DetailsComponent,
+    OrderStatusPipe
   ],
   imports: [
     BrowserModule,
