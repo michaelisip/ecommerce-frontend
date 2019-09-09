@@ -2,12 +2,6 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 
-const headers = new HttpHeaders({
-  'Content-Type': 'application/json'
-})
-
-const options = { headers: headers}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -20,10 +14,11 @@ export class ProductService {
   ) { }
 
   getProducts() {
-    this.http.get(this.productsEndpoint)
-      .subscribe(
-        products => console.log(products)
-    )
+    return this.http.get(this.productsEndpoint)
+  }
+
+  getProductPage(page) {
+    return this.http.get(this.productsEndpoint + '?page=' + page)
   }
 
 }
