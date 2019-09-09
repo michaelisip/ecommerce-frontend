@@ -14,7 +14,8 @@ import { ProductNewComponent } from './pages/product-new/product-new.component';
 import { ListComponent } from './pages/orders/list/list.component';
 import { CreateComponent } from './pages/orders/create/create.component';
 import { DetailsComponent } from './pages/orders/details/details.component';
-import { OrderStatusPipe } from './pipes/order-status.pipe'
+import { OrderStatusPipe } from './pipes/order-status.pipe';
+import { DashboardComponent } from './dashboard/dashboard.component'
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { OrderStatusPipe } from './pipes/order-status.pipe'
     ListComponent,
     CreateComponent,
     DetailsComponent,
-    OrderStatusPipe
+    OrderStatusPipe,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
