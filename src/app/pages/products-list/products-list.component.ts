@@ -34,15 +34,15 @@ export class ProductsListComponent implements OnInit {
       })
   }
 
-  // getProductPage(page) {
-  //   this.productService.getProductPage(page)
-  //     .subscribe(products => {
-  //       this.products = products,
-  //       this.collectionSize = products.total
-  //       this.page = products.current_page
-  //       this.maxSize = products.per_page
-  //     })
-  // }
+  getProductPage(page) {
+    this.productService.getProductPage(page)
+      .subscribe((data: any) => {
+        this.products = data.data,
+        this.collectionSize = data.total
+        this.page = data.current_page
+        this.maxSize = data.per_page
+      })
+  }
 
   deleteProduct(id) {
     this.productService.deleteProduct(id)

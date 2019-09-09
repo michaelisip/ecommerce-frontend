@@ -9,9 +9,14 @@ import { ProductNewComponent } from "./pages/product-new/product-new.component"
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'products', component: ProductsListComponent },
-  { path: 'product/:id', component: ProductDetailsComponent },
-  { path: 'new-product', component: ProductNewComponent },
+  {
+    path: 'products',
+    children: [
+      { path: '', pathMatch:'full', component: ProductsListComponent },
+      { path: 'create', pathMatch:'full', component: ProductNewComponent },
+      { path: ':id/show', pathMatch:'full', component: ProductDetailsComponent }
+    ]
+  },
 ]
 
 @NgModule({

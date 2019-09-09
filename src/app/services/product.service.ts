@@ -36,6 +36,10 @@ export class ProductService {
     return this.http.post(this.productsEndpoint, payload, httpOptions)
   }
 
+  updateProduct(id: number, payload: any) {
+    return this.http.put(this.productsEndpoint + `/${id}`, payload, httpOptions)
+  }
+
   deleteProduct(id) {
     return this.http.delete(this.productsEndpoint + `/${id}`)
   }
