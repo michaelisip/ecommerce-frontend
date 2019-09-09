@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 
+import { ordersEndpoint } from '../../environments/environment'
+
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
@@ -13,30 +15,28 @@ const httpOptions = {
 })
 export class OrdersService {
 
-  ordersEndpoint = 'http://localhost:8000/api/orders'
-
   constructor(
     private http: HttpClient
   ) { }
 
   getOrders() {
-    return this.http.get(this.ordersEndpoint)
+    return this.http.get(ordersEndpoint)
   }
 
   getOrder(id: number) {
-    return this.http.get(this.ordersEndpoint + `${id}`)
+    return this.http.get(ordersEndpoint + `${id}`)
   }
 
   addOrder(payload: any) {
-    return this.http.post(this.ordersEndpoint, payload, httpOptions)
+    return this.http.post(ordersEndpoint, payload, httpOptions)
   }
 
   updateOrder(id: number, payload: any) {
-    return this.http.put(this.ordersEndpoint + `${id}`, payload, httpOptions)
+    return this.http.put(ordersEndpoint + `${id}`, payload, httpOptions)
   }
 
   deleteOrder(id: number) {
-    return this.http.delete(this.ordersEndpoint + `${id}`)
+    return this.http.delete(ordersEndpoint + `${id}`)
   }
 
 }

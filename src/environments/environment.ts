@@ -6,6 +6,9 @@ export const environment = {
   production: false
 };
 
+export const productsEndpoint = 'http://localhost:8000/api/products'
+export const ordersEndpoint = 'http://localhost:8000/api/orders'
+
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

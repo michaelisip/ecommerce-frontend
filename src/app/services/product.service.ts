@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient, HttpHeaders } from '@angular/common/http'
 
+import { productsEndpoint } from "../../environments/environment";
+
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type':  'application/json',
@@ -14,34 +16,32 @@ const httpOptions = {
 })
 export class ProductService {
 
-  productsEndpoint = 'http://localhost:8000/api/products'
-
   constructor(
     private http: HttpClient
   ) { }
 
   getProducts() {
-    return this.http.get(this.productsEndpoint)
+    return this.http.get(productsEndpoint)
   }
 
   getProductPage(page) {
-    return this.http.get(this.productsEndpoint + '?page=' + page)
+    return this.http.get(productsEndpoint + '?page=' + page)
   }
 
   getProduct(id: number) {
-    return this.http.get(this.productsEndpoint + `/${id}`)
+    return this.http.get(productsEndpoint + `/${id}`)
   }
 
   addProduct(payload: any) {
-    return this.http.post(this.productsEndpoint, payload, httpOptions)
+    return this.http.post(productsEndpoint, payload, httpOptions)
   }
 
   updateProduct(id: number, payload: any) {
-    return this.http.put(this.productsEndpoint + `/${id}`, payload, httpOptions)
+    return this.http.put(productsEndpoint + `/${id}`, payload, httpOptions)
   }
 
   deleteProduct(id) {
-    return this.http.delete(this.productsEndpoint + `/${id}`)
+    return this.http.delete(productsEndpoint + `/${id}`)
   }
 
 }
