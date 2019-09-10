@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { ApiService } from "../../services/api.service";
-
-import { endpoints } from "../../../environments/environment";
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +9,30 @@ import { endpoints } from "../../../environments/environment";
 export class ProductService {
 
   constructor(
-    private apiService: ApiService
+    private api: ApiService
   ) { }
 
-  getProducts() {
-    return this.apiService.getRequest(endpoints.products)
+  getProducts(parameters: Object = {}) {
+    return this.api.get('products', parameters)
   }
+
+  getProductById(id: number) {
+    return this.api.get(`products/${id}`)
+      // .pipe(map(
+      //   (res: any) => res.data
+      // ))
+  }
+
+  addNewProduct(body: Object = {}) {
+    return this.api.post('products', body)
+  }
+
+  updateProductById(id: number, body: Object = {}) {
+    return this.api.put(`products/${id}`, body)
+  }
+
+  deleteProductById(id: number) {
+    return this.api.delete(`products/${id}`)
+  }
+
 }

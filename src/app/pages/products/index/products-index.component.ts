@@ -13,20 +13,48 @@ import { Product } from "../product";
 export class ProductsIndexComponent implements OnInit {
 
   products: Product[]
+  loading: boolean = false
+
+  pagination: any = {
+    page: 0,
+    per_page: 0,
+    total_pages: 0,
+    total: 0
+  }
 
   constructor(
     private productService: ProductService
   ) { }
 
   ngOnInit() {
-    this.getProducts()
+    this.onReload()
   }
 
-  getProducts() {
-    this.productService.getProducts()
+  onReload() {
+    this.fetchData(1)
+  }
+
+  fetchData(page: number) {
+    this.loading = false
+    this.pagination.page = page
+    return this.productService.getProducts(this.pagination)
       .subscribe(
-        (data: ApiReponse) => this.products = data.data,
-        error => console.warn(error)
+        (data: ApiReponse) => {
+          this.products = data.data,
+          this.pagination.per_page = data.per_page,
+          this.pagination.total = data.total
+          this.pagination.total_pages = data.last_page,
+          this.loading = false
+        },
+        (error: any) => console.warn(error)
+      )
+  }
+
+  deleteData(id: number) {
+    this.productService.deleteProductById(id)
+      .subscribe(
+        data => window.location.reload(),
+        error => console.warn(error),
       )
   }
 

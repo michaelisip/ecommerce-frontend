@@ -1,0 +1,34 @@
+<p>products-show works!</p>
+
+<form [formGroup]="productForm" (ngSubmit)="updateData(productForm.value)">
+  <div>
+    <label for="name">
+      Name
+    </label>
+    <input id="name" type="text" [(ngModel)]="product.name" formControlName="name">
+  </div>
+
+  <div>
+    <label for="description">
+      Description
+    </label>
+    <input id="description" type="text" [(ngModel)]="product.description" formControlName="description">
+  </div>
+
+  <div>
+    <label for="price">
+      Price
+    </label>
+    <input id="price" type="number" [(ngModel)]="product.price" formControlName="price">
+  </div>
+
+  <div>
+    <label for="quantity">
+      Quantity
+    </label>
+    <input id="quantity" type="number" [(ngModel)]="product.qty" formControlName="qty">
+  </div>
+
+  <button type="submit"> Update </button>
+
+</form>

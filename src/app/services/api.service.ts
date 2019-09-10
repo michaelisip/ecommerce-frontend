@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 
+import { environment as env } from '../../environments/environment';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
 const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json',
@@ -14,24 +18,34 @@ const httpOptions = {
 })
 export class ApiService {
 
+  private readonly BASE_URL = env.API_BASE_URL
+
   constructor(
     private http: HttpClient
   ) { }
 
-  getRequest(url: string) {
-    return this.http.get(url)
+  private formatErrors(error: any) {
+    return throwError(error.error)
   }
 
-  postRequest(url: string, payload: any) {
-    return this.http.post(url, payload, httpOptions)
+  get(path: string, parameters: any = {}) : Observable<any> {
+    return this.http.get(`${this.BASE_URL}/${path}`, { params: { ...parameters }})
+      .pipe(catchError(this.formatErrors))
   }
 
-  putRequest(url: string, payload: any) {
-    return this.http.put(url, payload, httpOptions)
+  post(path: string, body: Object = {}) : Observable<any> {
+    return this.http.post(`${this.BASE_URL}/${path}`, body, httpOptions)
+      .pipe(catchError(this.formatErrors))
   }
 
-  deleteRequest(url: string) {
-    return this.http.delete(url)
+  put(path: string, body: Object = {}) : Observable<any> {
+    return this.http.put(`${this.BASE_URL}/${path}`, body)
+      .pipe(catchError(this.formatErrors))
+  }
+
+  delete(path: string) : Observable<any> {
+    return this.http.delete(`${this.BASE_URL}/${path}`)
+      .pipe(catchError(this.formatErrors))
   }
 
 }
