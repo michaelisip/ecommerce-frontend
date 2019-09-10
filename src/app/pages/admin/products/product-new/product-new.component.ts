@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { FormBuilder } from "@angular/forms";
 
-import { ProductService } from "../../../services/product.service";
+import { ProductService } from "../../../../services/product.service";
 
 @Component({
   selector: 'app-product-new',

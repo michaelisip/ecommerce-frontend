@@ -2,14 +2,13 @@
 
   <div class="col-5 card border-0 radius-0 shadow m-2" *ngFor="let product of products">
     <div class="card-body">
-      <span class="badge badge-secondary px-3 text-white float-right"> {{ product.price }} </span>
+      <span class="badge badge-secondary px-3 text-white float-right"> {{ product.price | currency }} </span>
       <h5 class="card-title">
-        <a [routerLink]="['/products', product.id, 'show']">
-          {{ product.name }}
-        </a>
+        {{ product.name }}
       </h5>
       <p class="card-text text-muted"> {{ product.description }} </p>
-      <button class="btn btn-sm btn-danger" (click)="deleteProduct(product.id)"> Delete </button>
+      Stocks: <span> {{ product.qty }} </span>
+      <button (click)="addToCart(product.id)"> Add To Cart </button>
     </div>
   </div>
 </div>

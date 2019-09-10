@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 
 import { ProductService } from '../../../services/product.service';
 import { OrdersService } from '../../../services/orders.service';
+import { CartService } from "../../../services/cart.service";
 
 @Component({
-  selector: 'app-products-list',
-  templateUrl: './products-list.component.html',
-  styleUrls: ['./products-list.component.css']
+  selector: 'app-products',
+  templateUrl: './products.component.html',
+  styleUrls: ['./products.component.css']
 })
-export class ProductsListComponent implements OnInit {
+export class ProductsComponent implements OnInit {
 
   products;
   collectionSize;
@@ -18,6 +19,7 @@ export class ProductsListComponent implements OnInit {
   constructor(
     public productService: ProductService,
     public orderService: OrdersService,
+    public cartService: CartService,
   ) { }
 
   ngOnInit() {
@@ -49,5 +51,9 @@ export class ProductsListComponent implements OnInit {
       .subscribe(
         error => console.warn(error)
       )
+  }
+
+  addToCart(product) {
+    this.cartService.addToCart(product)
   }
 }
