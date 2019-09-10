@@ -6,9 +6,6 @@ export const environment = {
   production: false
 };
 
-export const productsEndpoint = 'http://localhost:8000/api/products'
-export const ordersEndpoint = 'http://localhost:8000/api/orders'
-
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
@@ -17,3 +14,8 @@ export const ordersEndpoint = 'http://localhost:8000/api/orders'
  * on performance if an error is thrown.
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+
+export const endpoints = {
+  products: 'http://localhost:8000/api/products',
+  orders: 'http://localhost:8000/api/orders',
+}
