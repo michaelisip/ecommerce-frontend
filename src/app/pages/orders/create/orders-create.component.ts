@@ -83,10 +83,6 @@ export class OrdersCreateComponent implements OnInit {
     this.items.splice(index, 1)
   }
 
-  /**
-   * Refactory beyond this line
-   */
-
   storeOrder() {
     return this.orderService.addNewOrder(this.body)
       .subscribe(
