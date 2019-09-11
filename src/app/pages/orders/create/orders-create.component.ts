@@ -19,7 +19,11 @@ export class OrdersCreateComponent implements OnInit {
   items = []
   products: Product[]
   order: Order
-  body: any
+  body = {
+    user_id: 1,
+    status: 0,
+    products: []
+  }
   loading: boolean = false
 
   pagination: any = {
@@ -60,7 +64,19 @@ export class OrdersCreateComponent implements OnInit {
   }
 
   addToOrder(product: Product) {
-    this.items.push(product)
+    if(this.items.includes(product)) {
+      this.body.products.forEach(function(item) {
+        if(item.product_id == product.id) {
+          ++item.qty
+        }
+      })
+    } else {
+      this.items.push(product)
+      this.body.products.push({
+        product_id: product.id,
+        qty: 1
+      })
+    }
   }
 
   removeProduct(index: number) {
@@ -72,33 +88,13 @@ export class OrdersCreateComponent implements OnInit {
    */
 
   storeOrder() {
-    this.body = {
-      user_id: 2,
-      status: 1,
-      products: this.formatOrderBody()
-    }
     return this.orderService.addNewOrder(this.body)
       .subscribe(
         (data: Order) => {
-          console.log(data),
           this.router.navigate(['orders'])
         },
         error => console.warn(error)
       )
-
-
-  }
-
-  formatOrderBody() {
-    let orderProducts = []
-    this.items.forEach(function(item) {
-      orderProducts.push({
-        product_id: item.id,
-        qty: 1
-      })
-    })
-
-    return orderProducts
   }
 
 }
