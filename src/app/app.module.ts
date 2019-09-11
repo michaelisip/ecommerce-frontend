@@ -11,7 +11,10 @@ import { OrderStatusPipe } from './pipes/order-status.pipe';
 import { ProductsCreateComponent } from './pages/products/create/products-create.component';
 import { ProductsIndexComponent } from './pages/products/index/products-index.component';
 import { OrdersIndexComponent } from './pages/orders/index/orders-index.component';
-import { OrdersCreateComponent } from './pages/orders/create/orders-create.component'
+import { OrdersCreateComponent } from './pages/orders/create/orders-create.component';
+import { UsersIndexComponent } from './pages/users/index/users-index.component';
+import { UsersShowComponent } from './pages/users/show/users-show.component';
+import { UsersCreateComponent } from './pages/users/create/users-create.component'
 
 @NgModule({
   declarations: [
@@ -21,7 +24,10 @@ import { OrdersCreateComponent } from './pages/orders/create/orders-create.compo
     ProductsCreateComponent,
     ProductsIndexComponent,
     OrdersIndexComponent,
-    OrdersCreateComponent
+    OrdersCreateComponent,
+    UsersIndexComponent,
+    UsersShowComponent,
+    UsersCreateComponent
   ],
   imports: [
     BrowserModule,

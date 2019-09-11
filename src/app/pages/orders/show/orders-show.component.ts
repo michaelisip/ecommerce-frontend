@@ -16,15 +16,15 @@ import { ApiReponse } from 'src/app/interfaces/api-reponse';
 })
 export class OrdersShowComponent implements OnInit {
 
-  order: Order
-  orderItems = []
-  products = []
-  id: number
-  body: {
-    status: number,
-    user_id: number,
+  order: Order = {
+    status: 0,
+    user_id: 1,
     products: []
   }
+  orderItems = [] // with name
+  items = []
+  products = []
+  id: number
   pagination = {
     page: 0,
     per_page: 0,
@@ -54,8 +54,10 @@ export class OrdersShowComponent implements OnInit {
         (data: Order) => {
           this.order.status = data.status,
           this.order.user_id = data.user_id,
-          this.orderItems = data.products
-          console.log(data)
+          data.products.forEach(element => {
+            this.addProduct(element.product)
+          });
+          console.log(this.orderItems)
         },
         error => console.warn(error)
       )
@@ -71,34 +73,35 @@ export class OrdersShowComponent implements OnInit {
           this.pagination.per_page = data.per_page,
           this.pagination.total_pages = data.last_page,
           this.pagination.total = data.total
-          console.log(data)
+          console.log(data.data)
         },
         error => console.warn(error)
       )
   }
 
   updateOrder() {
-    return this.orderService.updateOrderById(this.id, this.body)
+    this.order.products = this.items
+    return this.orderService.updateOrderById(this.id, this.order)
       .subscribe(
         (data: any) => window.location.reload(),
         error => console.warn(error)
       )
   }
 
-  formatOrderBody() {
-    let orderProducts = []
-    this.orderItems.forEach(function(item) {
-      orderProducts.push({
-        product_id: item.id,
+  addProduct(product: Product) {
+    if(this.orderItems.includes(product)) {
+      this.items.forEach(function(item) {
+        if(item.product_id == product.id) {
+          ++item.qty
+        }
+      })
+    } else {
+      this.orderItems.push(product)
+      this.items.push({
+        product_id: product.id,
         qty: 1
       })
-    })
-
-    return orderProducts
-  }
-
-  addProduct(product: Product) {
-    // To do
+    }
   }
 
   removeProduct(index: number) {
