@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router'
 import { OrderModule } from "../pages/orders/order.module";
 import { ProductModule } from "../pages/products/product.module";
+import { UserModule } from "../pages/users/user.module";
 
 const routes: Routes = [
   { path: '', redirectTo: '/products', pathMatch: 'full' },
@@ -18,7 +19,8 @@ const routes: Routes = [
    exports: [
       RouterModule,
       OrderModule,
-      ProductModule
+      ProductModule,
+      UserModule
    ]
 })
 export class AppRoutingModule { }
