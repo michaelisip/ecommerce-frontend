@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from "@angular/forms";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
+
+import { FormBuilder } from "@angular/forms";
 
 import { ProductService } from "../product.service";
 
@@ -13,20 +15,23 @@ import { Product } from '../product';
 })
 export class ProductsShowComponent implements OnInit {
 
-  product: Product
   id: number
-  productForm;
+  productForm: FormGroup
 
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute,
     private form: FormBuilder,
   ) {
-    this.productForm = this.form.group({
-      name: '',
-      description: '',
-      price: '',
-      qty: ''
+    this.productForm = this.productFormGroup()
+  }
+
+  productFormGroup() {
+    return this.form.group({
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      price: ['', Validators.required],
+      qty: ['', Validators.required]
     })
   }
 
@@ -40,7 +45,12 @@ export class ProductsShowComponent implements OnInit {
       .subscribe(
         (data: Product) => {
           console.log(data)
-          this.product = data
+          this.productForm.patchValue({
+            name: data.name,
+            description: data.description,
+            price: data.price,
+            qty: data.qty
+          })
         },
         error => console.warn(error)
       )

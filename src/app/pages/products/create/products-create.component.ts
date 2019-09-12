@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import { FormBuilder } from "@angular/forms";
+import { FormBuilder, FormGroup, FormControl, Validators } from "@angular/forms";
 
 import { ProductService } from "../product.service";
 import { Product } from '../product';
@@ -12,22 +12,26 @@ import { Product } from '../product';
 })
 export class ProductsCreateComponent implements OnInit {
 
-  productForm;
+  productForm: FormGroup
 
   constructor(
     private productService: ProductService,
     private form: FormBuilder,
     private router: Router
   ) {
-    this.productForm = this.form.group({
-      name: '',
-      description: '',
-      price: '',
-      qty: ''
-    })
+    this.productForm = this.productFormGroup()
   }
 
   ngOnInit() {
+  }
+
+  productFormGroup() : FormGroup {
+    return this.form.group({
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      price: ['', Validators.required],
+      qty: ['', Validators.required]
+    })
   }
 
   storeData(body: Object = {})  {

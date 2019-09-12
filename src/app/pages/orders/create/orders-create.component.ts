@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Router } from "@angular/router";
 
-import { FormBuilder, FormControl } from "@angular/forms";
+import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from "@angular/forms";
 
 import { ProductService } from "../../products/product.service";
 import { UserService } from "../../users/user.service";
@@ -29,14 +29,14 @@ export class OrdersCreateComponent implements OnInit {
   user: User
   orderItems = [] // order items
 
-  productForm: any
+  productForm: FormGroup
+  orderForm: FormGroup
 
   body = {
     user_id: 1,
     status: 0,
     products: []
   } //request body
-
   pagination: any = {
     page: 0,
     per_page: 0,
@@ -54,10 +54,16 @@ export class OrdersCreateComponent implements OnInit {
     private router: Router,
     private form: FormBuilder,
   ) {
-    this.productForm = this.form.group({
-      qty: new FormControl()
+    this.productForm = form.group({
+      product_id: [null],
+      qty: [null]
     })
-   }
+    this.orderForm = form.group({
+      status: 0,
+      user_id: [null, Validators.required],
+      products: this.form.array([])
+    })
+  }
 
   ngOnInit() {
     this.onReload()
@@ -67,7 +73,34 @@ export class OrdersCreateComponent implements OnInit {
     this.fetchProducts(1)
   }
 
-  formatter = (x: { name: string }) => x.name;
+  orderFormGroup() {
+    return this.form.group({
+      status: 0,
+      user_id: [null, Validators.required],
+      products: this.form.array([])
+    })
+  }
+
+  productFormGroup() {
+    return this.form.group({
+      product_id: [null],
+      qty: [null]
+    })
+  }
+
+  formatter = (x: { name: string }) => x.name
+
+  setOrderUser(user: User) {
+    this.orderForm.patchValue({
+      user_id: user.id
+    })
+  }
+
+  setOrderProduct(product: Product) {
+    this.productForm.patchValue({
+      product_id: product.id
+    })
+  }
 
   fetchProducts(page: number) {
     this.pagination.page = page
@@ -107,40 +140,28 @@ export class OrdersCreateComponent implements OnInit {
       tap(() => this.searching = false)
     )
 
-  addProductToOrder(productFormValues) {
-    this.orderItems.push({
-      product_id: this.orderItem.id,
-      name: this.orderItem.name,
-      qty: productFormValues.qty
-    })
-    console.log(this.orderItems)
-    console.log(this.user)
+  addItemToOrder() {
+    let controls = <FormArray>this.orderForm.controls.products
+    controls.push(this.productForm)
+    console.log(this.orderForm.value)
   }
 
-  addToOrder(product: Product) {
-    if (this.items.includes(product)) {
-      this.body.products.forEach(function (item) {
-        if (item.product_id == product.id) {
-          ++item.qty
-        }
-      })
-    } else {
-      this.items.push(product)
-      this.body.products.push({
-        product_id: product.id,
-        qty: 1
-      })
-    }
-  }
-
-  removeProduct(index: number) {
-    this.orderItems.splice(index, 1)
+  removeItemFromOrder(index: number) {
+    this.orderForm.controls.products.value.splice(index, 1)
   }
 
   storeOrder() {
+
+    this.orderForm.controls.products.value.forEach(element => {
+      this.orderItems.push({
+        product_id: element.product_id.id,
+        qty: element.qty
+      })
+    });
+
     return this.orderService.addNewOrder({
-      status: 0,
-      user_id: this.user.id,
+      status: this.orderForm.controls.status.value,
+      user_id: this.orderForm.controls.user_id.value.id,
       products: this.orderItems
     }).subscribe(
         (data: Order) => {

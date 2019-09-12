@@ -1,36 +1,45 @@
-<div class="row my-3">
-  <h2 class="col col-md-8"> Order Summary</h2>
-  <button class="col col-md-4 btn btn-primary btn-block" (click)="storeOrder()" *ngIf="user && orderItems.length > 0"> Submit Order </button>
-</div>
+<form [formGroup]="orderForm" (ngSubmit)="storeOrder()">
 
-
-<ng-template #rt let-r="result" let-t="term">
-  <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
-</ng-template>
-
-<div class="input-group mb-3">
-  <div class="input-group-prepend">
-    <span class="input-group-text" id="name">User</span>
+  <div class="row my-3">
+    <h2 class="col col-md-8"> Order Summary</h2>
+    <button class="col col-md-4 btn btn-primary btn-block" *ngIf="orderForm.controls.products.value.length && orderForm.controls.user_id.value"> Submit Order </button>
   </div>
-  <input id="typeahead-template" type="text" class="form-control" aria-label="Full Name" aria-describedby="name"
-    placeholder="Full Name"
-    [(ngModel)]="user"
-    [ngbTypeahead]="searchUser"
-    [resultTemplate]="rt"
-    [inputFormatter]="formatter" />
-</div>
 
-<hr>
+  <!-- Status -->
+  <input type="hidden" formControlName="status" value="0">
 
-<form [formGroup]="productForm" (ngSubmit)="addProductToOrder(productForm.value)">
+  <!-- User -->
+  <ng-template #userTemplate let-r="result" let-t="term">
+    <ngb-highlight [result]="r.name" [term]="t" (click)="setOrderUser(r)"></ngb-highlight>
+  </ng-template>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="name">User</span>
+    </div>
+    <input id="typeahead-template" type="text" class="form-control" aria-label="Full Name" aria-describedby="name"
+      placeholder="Full Name"
+      formControlName="user_id"
+      [ngbTypeahead]="searchUser"
+      [resultTemplate]="userTemplate"
+      [inputFormatter]="formatter" />
+  </div>
+</form>
+
+  <hr>
+
+<form [formGroup]="productForm" (ngSubmit)="addItemToOrder()">
   <div class="form-row">
     <div class="col col-md-6">
+
+      <!-- Product -->
+      <ng-template #productTemplate let-r="result" let-t="term">
+        <ngb-highlight [result]="r.name" [term]="t" (click)="setOrderProduct(r)"></ngb-highlight>
+      </ng-template>
       <input id="typeahead-template" type="text" class="form-control"
         placeholder="Product Name"
-        [(ngModel)]="orderItem"
-        [ngModelOptions]="{standalone: true}"
+        formControlName="product_id"
         [ngbTypeahead]="searchProduct"
-        [resultTemplate]="rt"
+        [resultTemplate]="productTemplate"
         [inputFormatter]="formatter" />
     </div>
     <div class="col col-md-3">
@@ -49,15 +58,19 @@
         <th colspan="col">#</th>
         <th colspan="col">Name</th>
         <th colspan="col">Quantity</th>
+        <th colspan="col"></th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of orderItems; index as i">
+      <tr *ngIf="!orderForm.controls.products.value.length">
+          <td colspan="3" class="text-center"> <i> No Products </i></td>
+      </tr>
+      <tr *ngFor="let item of orderForm.controls.products.value; index as i">
         <td> {{ i + 1 }} </td>
-        <td> {{ item.name }} </td>
+        <td> {{ item.product_id.name }} </td>
         <td> {{ item.qty }} </td>
         <td>
-          <button class="btn btn-sm btn-danger" (click)="removeProduct(i)"> Remove </button>
+          <button class="btn btn-sm btn-danger" (click)="removeItemFromOrder(i)"> Remove </button>
         </td>
       </tr>
     </tbody>
