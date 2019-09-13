@@ -2,7 +2,7 @@
 
   <div class="row my-3">
     <h2 class="col col-md-8"> Order Summary</h2>
-    <button class="col col-md-4 btn btn-primary btn-block" *ngIf="orderForm.controls.products.value.length && orderForm.controls.user_id.value"> Submit Order </button>
+    <button class="col col-md-4 btn btn-primary btn-block" *ngIf="orderForm.controls.products.value.length && orderForm.controls.user.value"> Submit Order </button>
   </div>
 
   <!-- Status -->
@@ -10,7 +10,7 @@
 
   <!-- User -->
   <ng-template #userTemplate let-r="result" let-t="term">
-    <ngb-highlight [result]="r.name" [term]="t" (click)="setOrderUser(r)"></ngb-highlight>
+    <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
   </ng-template>
   <div class="input-group mb-3">
     <div class="input-group-prepend">
@@ -18,14 +18,15 @@
     </div>
     <input id="typeahead-template" type="text" class="form-control" aria-label="Full Name" aria-describedby="name"
       placeholder="Full Name"
-      formControlName="user_id"
+      formControlName="user"
       [ngbTypeahead]="searchUser"
       [resultTemplate]="userTemplate"
       [inputFormatter]="formatter" />
   </div>
+
 </form>
 
-  <hr>
+<hr>
 
 <form [formGroup]="productForm" (ngSubmit)="addItemToOrder()">
   <div class="form-row">
@@ -33,11 +34,11 @@
 
       <!-- Product -->
       <ng-template #productTemplate let-r="result" let-t="term">
-        <ngb-highlight [result]="r.name" [term]="t" (click)="setOrderProduct(r)"></ngb-highlight>
+        <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
       </ng-template>
       <input id="typeahead-template" type="text" class="form-control"
         placeholder="Product Name"
-        formControlName="product_id"
+        formControlName="product"
         [ngbTypeahead]="searchProduct"
         [resultTemplate]="productTemplate"
         [inputFormatter]="formatter" />
@@ -67,7 +68,7 @@
       </tr>
       <tr *ngFor="let item of orderForm.controls.products.value; index as i">
         <td> {{ i + 1 }} </td>
-        <td> {{ item.product_id.name }} </td>
+        <td> {{ item.product.name }} </td>
         <td> {{ item.qty }} </td>
         <td>
           <button class="btn btn-sm btn-danger" (click)="removeItemFromOrder(i)"> Remove </button>

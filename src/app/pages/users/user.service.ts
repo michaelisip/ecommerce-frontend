@@ -16,7 +16,6 @@ export class UserService {
   }
 
   getUsersByName(paramaters: Object = {}) {
-    console.log(paramaters)
     return this.api.get('users/search', paramaters)
   }
 

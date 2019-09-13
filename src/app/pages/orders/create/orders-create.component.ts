@@ -8,7 +8,6 @@ import { ProductService } from "../../products/product.service";
 import { UserService } from "../../users/user.service";
 import { OrderService } from "../order.service";
 
-import { ApiReponse } from 'src/app/interfaces/api-reponse';
 import { Product } from '../../products/product';
 import { User } from "../../users/user";
 import { Order } from '../order';
@@ -22,30 +21,18 @@ import { debounceTime, map, distinctUntilChanged, tap, switchMap, catchError } f
 })
 export class OrdersCreateComponent implements OnInit {
 
-  products: Product[] // existing products
-
-  order: Order // order data
-  orderItem: Product
-  user: User
   orderItems = [] // order items
 
-  productForm: FormGroup
   orderForm: FormGroup
+  productForm: FormGroup
+  productsFormArray: FormArray
 
-  body = {
-    user_id: 1,
-    status: 0,
-    products: []
-  } //request body
   pagination: any = {
     page: 0,
     per_page: 0,
     total_pages: 0,
     total: 0
-  } // pagination parameter
-
-  searching = false
-  searchFailed = false
+  }
 
   constructor(
     private productService: ProductService,
@@ -54,96 +41,62 @@ export class OrdersCreateComponent implements OnInit {
     private router: Router,
     private form: FormBuilder,
   ) {
-    this.productForm = form.group({
-      product_id: [null],
-      qty: [null]
-    })
-    this.orderForm = form.group({
-      status: 0,
-      user_id: [null, Validators.required],
-      products: this.form.array([])
-    })
+    this.orderForm = this.orderFormGroup()
+    this.productForm = this.productFormGroup()
   }
 
   ngOnInit() {
-    this.onReload()
-  }
-
-  onReload() {
-    this.fetchProducts(1)
   }
 
   orderFormGroup() {
     return this.form.group({
       status: 0,
-      user_id: [null, Validators.required],
+      user: ['', Validators.required],
       products: this.form.array([])
     })
   }
 
   productFormGroup() {
     return this.form.group({
-      product_id: [null],
+      product: [null],
       qty: [null]
     })
   }
 
   formatter = (x: { name: string }) => x.name
 
-  setOrderUser(user: User) {
-    this.orderForm.patchValue({
-      user_id: user.id
-    })
-  }
-
-  setOrderProduct(product: Product) {
-    this.productForm.patchValue({
-      product_id: product.id
-    })
-  }
-
-  fetchProducts(page: number) {
-    this.pagination.page = page
-    return this.productService.getProducts(this.pagination)
-      .subscribe(
-        (data: ApiReponse) => {
-          this.products = data.data,
-            this.pagination.per_page = data.per_page,
-            this.pagination.total_pages = data.last_page,
-            this.pagination.total = data.total
-        },
-        error => console.warn(error)
-      )
-  }
-
   searchProduct = (text$: Observable<string>) =>
     text$.pipe(
-      debounceTime(200),
-      map(term => term === '' ? []
-        : this.products.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(term =>
+        term === '' ? []
+          : this.productService.getUsersByName({name: term}).pipe(
+            catchError((error) => {
+              console.log(error)
+              return of([])
+            })
+          )
+        ),
     )
 
   searchUser = (text$: Observable<string>) =>
     text$.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      tap(() => this.searching = true),
       switchMap(term =>
         term === '' ? []
           : this.userService.getUsersByName({ name: term }).pipe(
-            tap(() => this.searchFailed = false),
-            catchError(() => {
-              this.searchFailed = true;
+            catchError((error) => {
+              console.warn(error)
               return of([]);
             }))
       ),
-      tap(() => this.searching = false)
     )
 
   addItemToOrder() {
-    let controls = <FormArray>this.orderForm.controls.products
-    controls.push(this.productForm)
-    console.log(this.orderForm.value)
+    this.productsFormArray = this.orderForm.controls.products.value as FormArray;
+    this.productsFormArray.push(this.productForm.value);
   }
 
   removeItemFromOrder(index: number) {
@@ -154,18 +107,19 @@ export class OrdersCreateComponent implements OnInit {
 
     this.orderForm.controls.products.value.forEach(element => {
       this.orderItems.push({
-        product_id: element.product_id.id,
+        product_id: element.product.id,
         qty: element.qty
       })
     });
 
     return this.orderService.addNewOrder({
       status: this.orderForm.controls.status.value,
-      user_id: this.orderForm.controls.user_id.value.id,
+      user_id: this.orderForm.controls.user.value.id,
       products: this.orderItems
     }).subscribe(
         (data: Order) => {
           this.router.navigate(['orders'])
+          this.orderItems = []
         },
         error => console.warn(error)
       )

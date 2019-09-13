@@ -16,6 +16,10 @@ export class ProductService {
     return this.api.get('products', parameters)
   }
 
+  getUsersByName(parameters: Object = {}) {
+    return this.api.get('products/search', parameters)
+  }
+
   getProductById(id: number) {
     return this.api.get(`products/${id}`)
       // .pipe(map(

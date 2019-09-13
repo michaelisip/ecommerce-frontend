@@ -12,7 +12,6 @@ import { Order } from '../order';
 export class OrdersIndexComponent implements OnInit {
 
   orders: Order;
-  loading: boolean = false
 
   pagination: any = {
     page: 0,
@@ -34,7 +33,6 @@ export class OrdersIndexComponent implements OnInit {
   }
 
   fetchData(page: number) {
-    this.loading = false
     this.pagination.page = page
     return this.orderService.getOrders(this.pagination)
       .subscribe(
@@ -44,7 +42,6 @@ export class OrdersIndexComponent implements OnInit {
           this.pagination.per_page = data.per_page,
           this.pagination.total_pages = data.last_page,
           this.pagination.total = data.total
-          this.loading = false
         },
         error => console.warn(error)
       )
