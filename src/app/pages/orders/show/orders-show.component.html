@@ -1,47 +1,70 @@
-<h3 *ngIf="orderItems.length == 0"> No Products Included </h3>
+<form [formGroup]="orderForm" (ngSubmit)="updateOrder()">
+  <div class="row my-3">
+    <h2 class="col col-md-8"> Order Summary</h2>
+    <button class="col col-md-4 btn btn-primary btn-block" *ngIf="orderForm.controls.products.value.length && orderForm.controls.user.value"> Submit Order </button>
+  </div>
 
-<ul *ngIf="orderItems.length > 0;">
-  <li *ngFor="let item of orderItems; index as i">
-    {{ item.name }} <button class="btn btn-sm btn-danger" (click)="removeProduct(i)"> Remove </button>
-  </li>
-</ul>
+  <ng-template #userTemplate let-r="result" let-t="term">
+    <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+  </ng-template>
+  <div class="input-group mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="name">User</span>
+    </div>
+    <input id="typeahead-template" type="text" class="form-control" aria-label="Full Name" aria-describedby="name"
+      placeholder="Full Name"
+      formControlName="user"
+      [ngbTypeahead]="searchUser"
+      [resultTemplate]="userTemplate"
+      [inputFormatter]="formatter" />
+  </div>
+</form>
+  <hr>
 
-<button class="btn btn-primary" (click)="updateOrder()"> Update </button>
+  <form [formGroup]="productForm" (ngSubmit)="addItemToOrder()">
+    <div class="form-row">
+      <div class="col col-md-6">
+        <ng-template #productTemplate let-r="result" let-t="term">
+          <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+        </ng-template>
+        <input id="typeahead-template" type="text" class="form-control"
+          placeholder="Product Name"
+          formControlName="product"
+          [ngbTypeahead]="searchProduct"
+          [resultTemplate]="productTemplate"
+          [inputFormatter]="formatter" />
+      </div>
+      <div class="col col-md-3">
+        <input type="number" class="form-control" placeholder="Quantity" formControlName="qty">
+      </div>
+      <div class="col col-md-3">
+        <button class="btn btn-primary btn-block"> Add </button>
+      </div>
+    </div>
+  </form>
 
-<hr class="my-3">
-
-<table class="table">
-  <thead>
-    <tr>
-      <th colspan="col">#</th>
-      <th colspan="col">Name</th>
-      <th colspan="col">Description</th>
-      <th colspan="col">Price</th>
-      <th colspan="col">Quantity</th>
-      <th colspan="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of products; index as i">
-      <td> {{ i + 1 }} </td>
-      <td> {{ item.name }} </td>
-      <td> {{ item.description == null ? 'No Description' : item.description }} </td>
-      <td> {{ item.price | currency }} </td>
-      <td> {{ item.qty }} </td>
-      <td>
-        <button class="btn btn-sm btn-success" (click)="addProduct(item)"> Add </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<nav>
-  <ul class="pagination justify-content-end">
-    <li class="page-item"
-      *ngFor="let paginate of [].constructor(pagination.total_pages); let i = index"
-      [ngClass]="{'active': pagination.page == (i + 1)}">
-      <a class="page-link" (click)="fetchProducts(i + 1)" *ngIf="pagination.page != (i + 1)"> {{ i + 1 }} </a>
-      <span class="page-link" *ngIf="pagination.page == (i + 1)"> {{ i + 1 }} </span>
-    </li>
-  </ul>
-</nav>
+    <div class="mt-3">
+      <table class="table">
+        <thead>
+          <tr>
+            <th colspan="col">#</th>
+            <th colspan="col">Name</th>
+            <th colspan="col">Quantity</th>
+            <th colspan="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="!orderForm.controls.products.value.length">
+              <td colspan="3" class="text-center"> <i> No Products </i></td>
+          </tr>
+          <tr *ngFor="let item of orderForm.controls.products.value; index as i">
+            <td> {{ i + 1 }} </td>
+            <td> {{ item.product.name }} </td>
+            <td> {{ item.qty }} </td>
+            <td>
+              <button class="btn btn-sm btn-danger" (click)="removeItemFromOrder(i)"> Remove </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>

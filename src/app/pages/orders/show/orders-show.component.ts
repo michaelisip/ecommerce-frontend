@@ -1,13 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
+
+import { FormBuilder } from "@angular/forms";
 
 import { OrderService } from "../order.service";
 import { ProductService } from "../../products/product.service";
+import { UserService } from "../../users/user.service";
 
 import { Order } from '../order';
 import { Product } from '../../products/product';
 import { ApiReponse } from 'src/app/interfaces/api-reponse';
+import { Observable, of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
+import { FormGroup, FormArray, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-orders-show',
@@ -16,15 +22,15 @@ import { ApiReponse } from 'src/app/interfaces/api-reponse';
 })
 export class OrdersShowComponent implements OnInit {
 
-  order: Order = {
-    status: 0,
-    user_id: 1,
-    products: []
-  }
   orderItems = [] // with name
   items = []
   products = []
   id: number
+
+  orderForm: FormGroup
+  productForm: FormGroup
+  productsFormArray: FormArray
+
   pagination = {
     page: 0,
     per_page: 0,
@@ -35,77 +41,110 @@ export class OrdersShowComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private orderService: OrderService,
+    private userService: UserService,
     private productService: ProductService,
-  ) { }
+    private form: FormBuilder,
+    private router: Router
+  ) {
+    this.orderForm = this.orderFormGroup()
+    this.productForm = this.productFormGroup()
+   }
 
   ngOnInit() {
     this.id = +this.route.snapshot.paramMap.get('id')
-    this.onReload()
+    this.fetchData()
   }
 
-  onReload() {
-    this.fetchData()
-    this.fetchProducts(1)
+  orderFormGroup() {
+    return this.form.group({
+      user: [null],
+      status: [null],
+      products: this.form.array([])
+    })
+  }
+
+  productFormGroup() {
+    return this.form.group({
+      product: [null],
+      qty: [null]
+    })
   }
 
   fetchData() {
     return this.orderService.getOrderById(this.id)
       .subscribe(
         (data: Order) => {
-          this.order.status = data.status,
-          this.order.user_id = data.user_id,
-          data.products.forEach(element => {
-            this.addProduct(element.product)
-          });
-          console.log(this.orderItems)
+          this.orderForm = this.form.group({
+            status: data.status,
+            user: data.user,
+            products: this.form.array(data.products)
+          })
         },
         error => console.warn(error)
       )
   }
 
-  fetchProducts(page: number) {
-    this.pagination.page = page
-    return this.productService.getProducts(this.pagination)
-      .subscribe(
-        (data: ApiReponse) => {
-          this.products = data.data,
-          this.pagination.page = data.current_page,
-          this.pagination.per_page = data.per_page,
-          this.pagination.total_pages = data.last_page,
-          this.pagination.total = data.total
-          console.log(data.data)
-        },
-        error => console.warn(error)
-      )
+  searchProduct = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(term =>
+        term === '' ? []
+          : this.productService.getUsersByName({name: term}).pipe(
+            catchError((error) => {
+              console.warn(error)
+              return of([])
+            })
+          )
+        ),
+    )
+
+  searchUser = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(term =>
+        term === '' ? []
+          : this.userService.getUsersByName({ name: term }).pipe(
+            catchError((error) => {
+              console.warn(error)
+              return of([]);
+            }))
+      ),
+    )
+
+  formatter = (x: { name: string }) => x.name
+
+  addItemToOrder() {
+    this.productsFormArray = this.orderForm.controls.products.value as FormArray;
+    this.productsFormArray.push(this.productForm.value);
+    console.log(this.productsFormArray.value)
+    console.log(this.orderForm.value)
+  }
+
+  removeItemFromOrder(index: number) {
+    this.orderForm.controls.products.value.splice(index, 1)
   }
 
   updateOrder() {
-    this.order.products = this.items
-    return this.orderService.updateOrderById(this.id, this.order)
-      .subscribe(
-        (data: any) => window.location.reload(),
+    this.orderForm.controls.products.value.forEach(element => {
+      this.orderItems.push({
+        product_id: element.product.id,
+        qty: element.qty
+      })
+    })
+
+    return this.orderService.updateOrderById(this.id, {
+        status: this.orderForm.controls.status.value,
+        user_id: this.orderForm.controls.user.value.id,
+        products: this.orderItems
+      }).subscribe(
+        (data: Order) => {
+          this.router.navigate(['orders'])
+          this.orderItems = []
+        },
         error => console.warn(error)
       )
-  }
-
-  addProduct(product: Product) {
-    if(this.orderItems.includes(product)) {
-      this.items.forEach(function(item) {
-        if(item.product_id == product.id) {
-          ++item.qty
-        }
-      })
-    } else {
-      this.orderItems.push(product)
-      this.items.push({
-        product_id: product.id,
-        qty: 1
-      })
-    }
-  }
-
-  removeProduct(index: number) {
-    this.orderItems.splice(index, 1)
   }
 
 }

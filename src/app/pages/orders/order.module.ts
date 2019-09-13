@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from "@angular/router";
+import { ReactiveFormsModule } from "@angular/forms";
 
 import { OrdersIndexComponent } from "./index/orders-index.component";
 import { OrdersCreateComponent } from "./create/orders-create.component";
@@ -17,9 +18,10 @@ const routes: Routes = [
 ]
 
 @NgModule({
-  declarations: [OrdersShowComponent],
+  declarations: [],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     RouterModule.forRoot(routes)
   ],
   exports: [
