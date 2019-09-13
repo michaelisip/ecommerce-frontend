@@ -16,7 +16,8 @@ import { OrdersShowComponent } from "./pages/orders/show/orders-show.component";
 import { OrdersCreateComponent } from './pages/orders/create/orders-create.component';
 import { UsersIndexComponent } from './pages/users/index/users-index.component';
 import { UsersShowComponent } from './pages/users/show/users-show.component';
-import { UsersCreateComponent } from './pages/users/create/users-create.component'
+import { UsersCreateComponent } from './pages/users/create/users-create.component';
+import { HomeComponent } from './pages/home/home.component'
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { UsersCreateComponent } from './pages/users/create/users-create.componen
     OrdersCreateComponent,
     UsersIndexComponent,
     UsersShowComponent,
-    UsersCreateComponent
+    UsersCreateComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

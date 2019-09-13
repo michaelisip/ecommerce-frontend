@@ -1,0 +1,30 @@
+<div class="d-flex justify-content-center">
+
+  <a [routerLink]="['/orders']">
+    <span class="badge badge-secondary px-5 py-3 m-3">
+      Orders
+      <h1>
+        {{ ordersCount }}
+      </h1>
+    </span>
+  </a>
+
+  <a [routerLink]="['/products']">
+    <span class="badge badge-secondary px-5 py-3 m-3">
+      Products
+      <h1>
+        {{ productsCount }}
+      </h1>
+    </span>
+  </a>
+
+  <a [routerLink]="['/users']">
+    <span class="badge badge-secondary px-5 py-3 m-3">
+      Users
+      <h1>
+        {{ usersCount }}
+      </h1>
+    </span>
+  </a>
+
+</div>

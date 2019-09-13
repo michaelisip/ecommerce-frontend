@@ -4,9 +4,10 @@ import { RouterModule, Routes } from '@angular/router'
 import { OrderModule } from "../pages/orders/order.module";
 import { ProductModule } from "../pages/products/product.module";
 import { UserModule } from "../pages/users/user.module";
+import { HomeComponent } from '../pages/home/home.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/products', pathMatch: 'full' },
+  { path: '', pathMatch: 'full', component: HomeComponent },
 ]
 
 @NgModule({

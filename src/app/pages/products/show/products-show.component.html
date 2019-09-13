@@ -1,34 +1,39 @@
-<p>products-show works!</p>
+<div class="d-flex justify-content-center">
+    <form [formGroup]="productForm" (ngSubmit)="updateData(productForm.value)" class="w-50">
 
-<form [formGroup]="productForm" (ngSubmit)="updateData(productForm.value)">
-  <div>
-    <label for="name">
-      Name
-    </label>
-    <input id="name" type="text" formControlName="name">
+      <h2> Product Information </h2>
+
+      <hr class="mb-5">
+
+      <div class="form-group">
+        <label for="name" class="">Product Name</label>
+        <div class="">
+          <input type="text" class="form-control" id="name" formControlName="name" placeholder="Awesome Product">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="">Product Description</label>
+        <div class="">
+          <textarea name="" class="form-control" id="description" rows="3" formControlName="description" placeholder="Long Description"></textarea>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col col-md-6">
+            <label for="price" class="">Price ($)</label>
+            <div class="">
+              <input type="number" class="form-control" id="price" formControlName="price" placeholder="$00.00">
+            </div>
+        </div>
+        <div class="form-group col-md-6">
+            <label for="quantity" class="">Quantity</label>
+            <div class="">
+              <input type="number" class="form-control" id="quantity" formControlName="qty" placeholder="99">
+            </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block"> Add </button>
+    </form>
   </div>
-
-  <div>
-    <label for="description">
-      Description
-    </label>
-    <input id="description" type="text" formControlName="description">
-  </div>
-
-  <div>
-    <label for="price">
-      Price
-    </label>
-    <input id="price" type="number" formControlName="price">
-  </div>
-
-  <div>
-    <label for="quantity">
-      Quantity
-    </label>
-    <input id="quantity" type="number" formControlName="qty">
-  </div>
-
-  <button type="submit"> Update </button>
-
-</form>
