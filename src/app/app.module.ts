@@ -17,7 +17,9 @@ import { OrdersCreateComponent } from './pages/orders/create/orders-create.compo
 import { UsersIndexComponent } from './pages/users/index/users-index.component';
 import { UsersShowComponent } from './pages/users/show/users-show.component';
 import { UsersCreateComponent } from './pages/users/create/users-create.component';
-import { HomeComponent } from './pages/home/home.component'
+import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from "./pages/authentication/login/login.component";
+import { RegisterComponent } from "./pages/authentication/register/register.component";
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { HomeComponent } from './pages/home/home.component'
     UsersIndexComponent,
     UsersShowComponent,
     UsersCreateComponent,
-    HomeComponent
+    HomeComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,

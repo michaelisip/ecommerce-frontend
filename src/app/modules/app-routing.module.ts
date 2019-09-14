@@ -5,6 +5,7 @@ import { OrderModule } from "../pages/orders/order.module";
 import { ProductModule } from "../pages/products/product.module";
 import { UserModule } from "../pages/users/user.module";
 import { HomeComponent } from '../pages/home/home.component';
+import { AuthenticationModule } from '../pages/authentication/authentication.module';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: HomeComponent },
@@ -21,7 +22,8 @@ const routes: Routes = [
       RouterModule,
       OrderModule,
       ProductModule,
-      UserModule
+      UserModule,
+      AuthenticationModule
    ]
 })
 export class AppRoutingModule { }
