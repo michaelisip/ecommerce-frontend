@@ -6,12 +6,17 @@ import { CookieService } from "ngx-cookie-service";
 
 import { ProductService } from "../pages/products/product.service";
 
+import { Store } from "@ngxs/store";
+import { GetToken } from '../pages/authentication/auth.model';
+import { AuthState } from '../pages/authentication/auth.state';
+
 @Injectable()
 export class Interceptor implements HttpInterceptor {
 
   constructor(
     private cookie: CookieService,
-    private productService: ProductService
+    private productService: ProductService,
+    private store: Store
   ) {
 
   }
