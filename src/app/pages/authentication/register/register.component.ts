@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
+import { Router } from "@angular/router";
+
 import { AuthenticationService } from "../authentication.service";
+
+import { CookieService } from "ngx-cookie-service";
 
 @Component({
   selector: 'app-register',
@@ -14,7 +18,9 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private authService: AuthenticationService,
-    private form: FormBuilder
+    private form: FormBuilder,
+    private cookie: CookieService,
+    private route: Router
   ) {
     this.registerForm = this.registerFormGroup()
   }
@@ -35,7 +41,11 @@ export class RegisterComponent implements OnInit {
     // console.log(this.registerForm.value)
     return this.authService.register(this.registerForm.value)
       .subscribe(
-        (data) => console.log(data)
+        data => {
+          this.cookie.set('token', data.access_token)
+          this.route.navigate(['/products'])
+          console.log(data)
+        }
       )
   }
 

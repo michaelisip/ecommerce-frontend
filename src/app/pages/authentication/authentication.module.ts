@@ -5,6 +5,8 @@ import { RouterModule, Routes } from "@angular/router";
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 
+import { CookieService } from "ngx-cookie-service";
+
 const routes: Routes = [
   { path: '',
     children: [
@@ -17,7 +19,7 @@ const routes: Routes = [
   declarations: [],
   imports: [
     CommonModule,
-    RouterModule.forRoot(routes)
+    RouterModule.forRoot(routes),
   ],
   exports: [
     RouterModule

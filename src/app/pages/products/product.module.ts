@@ -6,9 +6,13 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { ProductsIndexComponent } from "./index/products-index.component";
 import { ProductsCreateComponent } from "./create/products-create.component";
 import { ProductsShowComponent } from './show/products-show.component';
+import { AuthGuard } from 'src/app/services/guards/auth.guard';
 
 const routes: Routes = [
   { path: 'products',
+    canActivateChild: [
+      AuthGuard
+    ],
     children: [
       { path: '', pathMatch: 'full', component: ProductsIndexComponent },
       { path: ':id/show', pathMatch: 'full', component: ProductsShowComponent },

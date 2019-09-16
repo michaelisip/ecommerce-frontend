@@ -42,7 +42,9 @@ export class HomeComponent implements OnInit {
       .subscribe(
         (data: ApiReponse) => {
           this.productsCount = data.total
-        }
+          console.log(data)
+        },
+        error => console.warn(error)
       )
   }
 
@@ -50,6 +52,7 @@ export class HomeComponent implements OnInit {
     return this.userService.getUsers({page: 1})
       .subscribe(
         (data: ApiReponse) => {
+          console.log(data)
           this.usersCount = data.total
         }
       )

@@ -3,6 +3,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 import { AuthenticationService } from "../authentication.service";
 
+import { CookieService } from "ngx-cookie-service";
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -14,7 +16,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private authService: AuthenticationService,
-    private form: FormBuilder
+    private form: FormBuilder,
+    private cookie: CookieService
   ) {
     this.loginForm = this.loginFormGroup()
   }
@@ -33,7 +36,10 @@ export class LoginComponent implements OnInit {
     console.log(this.loginForm.value)
     return this.authService.login(this.loginForm.value)
       .subscribe(
-        data => console.log(data)
+        data => {
+          this.cookie.set('token', data.access_token)
+          console.log(data)
+        }
       )
   }
 
