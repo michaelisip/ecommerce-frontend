@@ -1,8 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
-import { HttpClientModule } from '@angular/common/http'
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap"
 import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { CookieService } from "ngx-cookie-service";
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './themes/components/nav/nav.component';
@@ -20,6 +21,8 @@ import { UsersCreateComponent } from './pages/users/create/users-create.componen
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from "./pages/authentication/login/login.component";
 import { RegisterComponent } from "./pages/authentication/register/register.component";
+
+import { Interceptor } from "./services/http.interceptor";
 
 @NgModule({
   declarations: [
@@ -47,7 +50,14 @@ import { RegisterComponent } from "./pages/authentication/register/register.comp
     ReactiveFormsModule,
     FormsModule
   ],
-  providers: [],
+  providers: [
+    CookieService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: Interceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
