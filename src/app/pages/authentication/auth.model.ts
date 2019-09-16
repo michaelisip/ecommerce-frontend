@@ -2,15 +2,16 @@ export class AuthStateModel {
   token: string
 }
 
-export class SetToken {
-  static readonly type = '[Auth] SetToken'
-  constructor(public token: string) {}
+export class Register {
+  static readonly type = '[Auth] Register'
+  constructor(public body: Object = {}) {}
 }
 
-export class GetToken {
-  static readonly type = '[Auth] GetToken'
+export class Login {
+  static readonly type = '[Auth] Login'
+  constructor(public body: Object = {}) {}
 }
 
-export class RemoveToken {
-  static readonly type = '[Auth ] RemoveToken'
+export class Logout {
+  static readonly type = '[Auth ] Logout'
 }

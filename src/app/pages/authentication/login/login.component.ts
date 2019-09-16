@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
-import { AuthenticationService } from "../authentication.service";
-
-import { CookieService } from "ngx-cookie-service";
+import { Router } from "@angular/router";
 
 import { Store } from "@ngxs/store";
-import { SetToken, GetToken } from '../auth.model';
+import { Login } from '../auth.model';
 
 @Component({
   selector: 'app-login',
@@ -18,10 +16,9 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup
 
   constructor(
-    private authService: AuthenticationService,
     private form: FormBuilder,
-    private cookie: CookieService,
-    private store: Store
+    private store: Store,
+    private route: Router
   ) {
     this.loginForm = this.loginFormGroup()
   }
@@ -37,17 +34,10 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    console.log(this.loginForm.value)
-    return this.authService.login(this.loginForm.value)
+    return this.store.dispatch(new Login(this.loginForm.value))
       .subscribe(
-        data => {
-          this.cookie.set('token', data.access_token)
-          this.store.dispatch(new SetToken(data.access_token))
-          // this.store.dispatch(new GetToken())
-          //   .subscribe(
-          //     data => console.log(data.auth.token)
-          //   )
-        }
+        () => this.route.navigate(['/']),
+        error => console.warn(error)
       )
   }
 

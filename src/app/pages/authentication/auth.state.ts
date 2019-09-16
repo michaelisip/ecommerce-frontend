@@ -1,5 +1,5 @@
 import { State, Action, Selector, StateContext } from "@ngxs/store";
-import { AuthStateModel, SetToken, GetToken, RemoveToken } from './auth.model';
+import { AuthStateModel, Register, Login, Logout } from './auth.model';
 import { AuthenticationService } from './authentication.service';
 
 @State<AuthStateModel>({
@@ -17,24 +17,45 @@ export class AuthState {
     private authService: AuthenticationService
   ) {}
 
-  @Action(SetToken)
-  setToken({ patchState }: StateContext<AuthStateModel>, { token } : SetToken) {
-    patchState({
-      token: token
-    })
+  @Action(Register)
+  register({ patchState }: StateContext<AuthStateModel>, { body } : Register) {
+    this.authService.register(body)
+      .subscribe(
+        data => {
+          patchState({
+            token: data.access_token
+          })
+        }
+      )
   }
 
-  @Action(GetToken)
-  getToken({ getState }: StateContext<AuthStateModel>) {
-    const token = getState()
-    return token
+  @Action(Login)
+  login({ patchState }: StateContext<AuthStateModel>, { body } : Login) {
+    this.authService.login(body)
+      .subscribe(
+        data => {
+          patchState({
+            token: data.access_token
+          })
+        },
+        error => console.warn(error)
+      )
   }
 
-  @Action(RemoveToken)
-  removeToken({ setState }: StateContext<AuthStateModel>) {
-    setState({
-      token: null
-    })
+  /**
+   * Not used atm
+   */
+
+  @Action(Logout)
+  logout({ setState }: StateContext<AuthStateModel>) {
+    this.authService.logout()
+      .subscribe(
+        () => {
+          setState({
+            token: null
+          })
+        }
+      )
   }
 }
 

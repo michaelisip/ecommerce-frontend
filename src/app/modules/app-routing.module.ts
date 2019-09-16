@@ -6,9 +6,17 @@ import { ProductModule } from "../pages/products/product.module";
 import { UserModule } from "../pages/users/user.module";
 import { HomeComponent } from '../pages/home/home.component';
 import { AuthenticationModule } from '../pages/authentication/authentication.module';
+import { AuthGuard } from '../services/guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', component: HomeComponent },
+  {
+    path: '',
+    pathMatch: 'full',
+    component: HomeComponent,
+    canActivate: [
+      AuthGuard
+    ]
+  },
 ]
 
 @NgModule({

@@ -7,15 +7,11 @@ import { CookieService } from "ngx-cookie-service";
 import { ProductService } from "../pages/products/product.service";
 
 import { Store } from "@ngxs/store";
-import { GetToken } from '../pages/authentication/auth.model';
-import { AuthState } from '../pages/authentication/auth.state';
 
 @Injectable()
 export class Interceptor implements HttpInterceptor {
 
   constructor(
-    private cookie: CookieService,
-    private productService: ProductService,
     private store: Store
   ) {
 
@@ -23,14 +19,17 @@ export class Interceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler) : Observable<HttpEvent<any>> {
 
-    if (this.cookie.get('token')) {
+    const token = this.store.snapshot().auth.token
+
+    if (token) {
       request = request.clone({
         setHeaders: {
-          'Authorization' : 'Bearer ' + this.cookie.get('token')
+          'Authorization' : 'Bearer ' + token
         }
       })
     }
 
+    console.log(request)
     return next.handle(request)
   }
 }

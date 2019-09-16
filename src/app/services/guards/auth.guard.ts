@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 
-import { CookieService } from "ngx-cookie-service";
+import { Store } from "@ngxs/store";
 
 @Injectable({
   providedIn: 'root'
@@ -10,14 +9,20 @@ import { CookieService } from "ngx-cookie-service";
 export class AuthGuard implements CanActivate {
 
   constructor(
-    private cookie: CookieService
+    private store: Store,
+    private route: Router
   ) {}
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean {
 
-      return this.cookie.get('token') ? true : false
+      if (! this.store.snapshot().auth.token) {
+        this.route.navigate(['/login'])
+      }
+
+      return true
+
   }
 
   canActivateChild(

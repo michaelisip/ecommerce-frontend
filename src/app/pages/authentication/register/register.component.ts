@@ -8,7 +8,7 @@ import { AuthenticationService } from "../authentication.service";
 import { CookieService } from "ngx-cookie-service";
 
 import { Store } from "@ngxs/store";
-import { SetToken } from '../auth.model';
+import { Register } from '../auth.model';
 
 @Component({
   selector: 'app-register',
@@ -42,14 +42,10 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
-    // console.log(this.registerForm.value)
-    return this.authService.register(this.registerForm.value)
+    return this.store.dispatch(new Register(this.registerForm.value))
       .subscribe(
-        data => {
-          this.cookie.set('token', data.access_token)
-          this.store.dispatch(new SetToken(data.access_token))
-          this.route.navigate(['/products'])
-        }
+        () => this.route.navigate(['/']),
+        error => console.warn(error)
       )
   }
 
